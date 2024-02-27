@@ -17,6 +17,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.Measure;
 import edu.wpi.first.units.Voltage;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -26,26 +27,26 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
 public class Mechanism extends SubsystemBase {
     /* TODO: Set CAN ID and CAN Bus */
-    private final TalonFX m_leftFrontDrive = new TalonFX(0, "rio");
+    private final TalonFX m_leftFrontDrive = new TalonFX(2, "rio");
     // Left back drive is master drive motor
-    private final TalonFX m_leftBackDrive = new TalonFX(0, "rio");
-    private final TalonFX m_rightFrontDrive = new TalonFX(0, "rio");
-    private final TalonFX m_rightBackDrive = new TalonFX(0, "rio");
+    private final TalonFX m_leftBackDrive = new TalonFX(2, "rio");
+    private final TalonFX m_rightFrontDrive = new TalonFX(4, "rio");
+    private final TalonFX m_rightBackDrive = new TalonFX(6, "rio");
 
-    private final TalonFX m_leftFrontAngle = new TalonFX(0, "rio");
-    private final TalonFX m_leftBackAngle = new TalonFX(0, "rio");
-    private final TalonFX m_rightFrontAngle = new TalonFX(0, "rio");
-    private final TalonFX m_rightBackAngle = new TalonFX(0, "rio");
+    private final TalonFX m_leftFrontAngle = new TalonFX(1, "rio");
+    private final TalonFX m_leftBackAngle = new TalonFX(7, "rio");
+    private final TalonFX m_rightFrontAngle = new TalonFX(3, "rio");
+    private final TalonFX m_rightBackAngle = new TalonFX(5, "rio");
 
-    private final CANcoder m_leftFrontCANCoder = new CANcoder(0, "rio");
-    private final CANcoder m_leftBackCANCoder = new CANcoder(0, "rio");
-    private final CANcoder m_rightFrontCANCoder = new CANcoder(0, "rio");
-    private final CANcoder m_rightBackCANCoder = new CANcoder(0, "rio");
+    private final CANcoder m_leftFrontCANCoder = new CANcoder(9, "rio");
+    private final CANcoder m_leftBackCANCoder = new CANcoder(12, "rio");
+    private final CANcoder m_rightFrontCANCoder = new CANcoder(10, "rio");
+    private final CANcoder m_rightBackCANCoder = new CANcoder(11, "rio");
 
-    private final double leftFrontEncoderOffset = 0.0;
-    private final double leftBackEncoderOffset = 0.0;
-    private final double rightFrontEncoderOffset = 0.0;
-    private final double rightBackEncoderOffset = 0.0;
+    private final double leftFrontEncoderOffset = Units.degreesToRotations(33.838);
+    private final double leftBackEncoderOffset = Units.degreesToRotations(169.277);
+    private final double rightFrontEncoderOffset = Units.degreesToRotations(111.269);
+    private final double rightBackEncoderOffset = Units.degreesToRotations(160.927);
 
     /* TODO: Uncomment this line to add a follower motor */
     
@@ -164,5 +165,11 @@ public class Mechanism extends SubsystemBase {
         SmartDashboard.putNumber("Right Front CANCoder", m_rightFrontCANCoder.getAbsolutePosition().getValue());
         SmartDashboard.putNumber("Left Back CANCoder", m_leftBackCANCoder.getAbsolutePosition().getValue());
         SmartDashboard.putNumber("Right Back CANCoder", m_rightBackCANCoder.getAbsolutePosition().getValue());
+
+        SmartDashboard.putNumber("Left Front TalonFX", m_leftFrontAngle.getPosition().getValue());
+        SmartDashboard.putNumber("Right Front TalonFX", m_rightFrontAngle.getPosition().getValue());
+        SmartDashboard.putNumber("Left Back TalonFX", m_leftBackAngle.getPosition().getValue());
+        SmartDashboard.putNumber("Right Back TalonFX", m_rightBackAngle.getPosition().getValue());
+        
     }
 }
