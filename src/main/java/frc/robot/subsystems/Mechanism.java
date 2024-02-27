@@ -12,6 +12,7 @@ import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.units.Measure;
 import edu.wpi.first.units.Voltage;
@@ -21,10 +22,11 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
 public class Mechanism extends SubsystemBase {
     /* TODO: Set CAN ID and CAN Bus */
-    private final TalonFX m_motorToTest = new TalonFX(0, "rio");
+    private final TalonFX m_motorToTest = new TalonFX(0, "CANWeFixIt");
+
+    private final TalonFX m_motorToBreak = new TalonFX(0, "CANWeFixIt");
 
     /* TODO: Uncomment this line to add a follower motor */
-    // private final TalonFX m_followerMotorToTest = new TalonFX(1, "rio");
     
     private final DutyCycleOut m_joystickControl = new DutyCycleOut(0);
     private final VoltageOut m_sysidControl = new VoltageOut(0);
@@ -69,13 +71,16 @@ public class Mechanism extends SubsystemBase {
         cfg.CurrentLimits.SupplyCurrentThreshold = 60;
         cfg.CurrentLimits.SupplyTimeThreshold = 0.1;
 
-        cfg.Feedback.SensorToMechanismRatio = 1;
+        cfg.Feedback.SensorToMechanismRatio = 5.0;
         cfg.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
         m_motorToTest.getConfigurator().apply(cfg);
 
         /* TODO: Uncomment to add follower motor */
-        // m_followerMotorToTest.setControl(new Follower(m_motorToTest.getDeviceID(), true));
+
+        TalonFXConfiguration breakConfig = new TalonFXConfiguration();
+        breakConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+        m_motorToBreak.getConfigurator().apply(breakConfig);
     }
 
     public Command joystickDriveCommand(DoubleSupplier output) {
