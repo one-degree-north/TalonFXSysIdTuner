@@ -21,10 +21,10 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
 public class Mechanism extends SubsystemBase {
     /* TODO: Set CAN ID and CAN Bus */
-    private final TalonFX m_motorToTest = new TalonFX(0, "rio");
+    private final TalonFX m_motorToTest = new TalonFX(0, "CANWeFixIt");
 
     /* TODO: Uncomment this line to add a follower motor */
-    // private final TalonFX m_followerMotorToTest = new TalonFX(1, "rio");
+    private final TalonFX m_followerMotorToTest = new TalonFX(1, "CANWeFixIt");
     
     private final DutyCycleOut m_joystickControl = new DutyCycleOut(0);
     private final VoltageOut m_sysidControl = new VoltageOut(0);
@@ -69,13 +69,13 @@ public class Mechanism extends SubsystemBase {
         cfg.CurrentLimits.SupplyCurrentThreshold = 60;
         cfg.CurrentLimits.SupplyTimeThreshold = 0.1;
 
-        cfg.Feedback.SensorToMechanismRatio = 1;
+        cfg.Feedback.SensorToMechanismRatio = 120.0/1.0;
         cfg.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
         m_motorToTest.getConfigurator().apply(cfg);
 
         /* TODO: Uncomment to add follower motor */
-        // m_followerMotorToTest.setControl(new Follower(m_motorToTest.getDeviceID(), true));
+        m_followerMotorToTest.setControl(new Follower(m_motorToTest.getDeviceID(), true));
     }
 
     public Command joystickDriveCommand(DoubleSupplier output) {
