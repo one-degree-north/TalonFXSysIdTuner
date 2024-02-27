@@ -21,7 +21,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
 public class Mechanism extends SubsystemBase {
     /* TODO: Set CAN ID and CAN Bus */
-    private final TalonFX m_motorToTest = new TalonFX(0, "rio");
+    private final TalonFX m_motorToTest = new TalonFX(0, "CANWeFixIt");
 
     /* TODO: Uncomment this line to add a follower motor */
     // private final TalonFX m_followerMotorToTest = new TalonFX(1, "rio");
@@ -69,7 +69,7 @@ public class Mechanism extends SubsystemBase {
         cfg.CurrentLimits.SupplyCurrentThreshold = 60;
         cfg.CurrentLimits.SupplyTimeThreshold = 0.1;
 
-        cfg.Feedback.SensorToMechanismRatio = 1;
+        cfg.Feedback.SensorToMechanismRatio = 10.5/1;
         cfg.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
         m_motorToTest.getConfigurator().apply(cfg);
