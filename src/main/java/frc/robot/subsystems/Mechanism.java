@@ -12,6 +12,7 @@ import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.units.Measure;
 import edu.wpi.first.units.Voltage;
@@ -25,6 +26,8 @@ public class Mechanism extends SubsystemBase {
 
     /* TODO: Uncomment this line to add a follower motor */
     private final TalonFX m_followerMotorToTest = new TalonFX(1, "CANWeFixIt");
+
+    private final TalonFX m_motorToBreak = new TalonFX(2, "CANWeFixIt");
     
     private final DutyCycleOut m_joystickControl = new DutyCycleOut(0);
     private final VoltageOut m_sysidControl = new VoltageOut(0);
@@ -76,6 +79,10 @@ public class Mechanism extends SubsystemBase {
 
         /* TODO: Uncomment to add follower motor */
         m_followerMotorToTest.setControl(new Follower(m_motorToTest.getDeviceID(), true));
+
+        TalonFXConfiguration breakConfig = new TalonFXConfiguration();
+        breakConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+        m_motorToBreak.getConfigurator().apply(breakConfig);
     }
 
     public Command joystickDriveCommand(DoubleSupplier output) {
