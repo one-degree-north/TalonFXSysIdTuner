@@ -27,21 +27,21 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
 public class Mechanism extends SubsystemBase {
     /* TODO: Set CAN ID and CAN Bus */
-    private final TalonFX m_leftFrontDrive = new TalonFX(2, "rio");
+    private final TalonFX m_leftFrontDrive = new TalonFX(2, "CANWeFixIt");
     // Left back drive is master drive motor
-    private final TalonFX m_leftBackDrive = new TalonFX(2, "rio");
-    private final TalonFX m_rightFrontDrive = new TalonFX(4, "rio");
-    private final TalonFX m_rightBackDrive = new TalonFX(6, "rio");
+    private final TalonFX m_leftBackDrive = new TalonFX(2, "CANWeFixIt");
+    private final TalonFX m_rightFrontDrive = new TalonFX(4, "CANWeFixIt");
+    private final TalonFX m_rightBackDrive = new TalonFX(6, "CANWeFixIt");
 
-    private final TalonFX m_leftFrontAngle = new TalonFX(1, "rio");
-    private final TalonFX m_leftBackAngle = new TalonFX(7, "rio");
-    private final TalonFX m_rightFrontAngle = new TalonFX(3, "rio");
-    private final TalonFX m_rightBackAngle = new TalonFX(5, "rio");
+    private final TalonFX m_leftFrontAngle = new TalonFX(1, "CANWeFixIt");
+    private final TalonFX m_leftBackAngle = new TalonFX(7, "CANWeFixIt");
+    private final TalonFX m_rightFrontAngle = new TalonFX(3, "CANWeFixIt");
+    private final TalonFX m_rightBackAngle = new TalonFX(5, "CANWeFixIt");
 
-    private final CANcoder m_leftFrontCANCoder = new CANcoder(9, "rio");
-    private final CANcoder m_leftBackCANCoder = new CANcoder(12, "rio");
-    private final CANcoder m_rightFrontCANCoder = new CANcoder(10, "rio");
-    private final CANcoder m_rightBackCANCoder = new CANcoder(11, "rio");
+    private final CANcoder m_leftFrontCANCoder = new CANcoder(9, "CANWeFixIt");
+    private final CANcoder m_leftBackCANCoder = new CANcoder(12, "CANWeFixIt");
+    private final CANcoder m_rightFrontCANCoder = new CANcoder(10, "CANWeFixIt");
+    private final CANcoder m_rightBackCANCoder = new CANcoder(11, "CANWeFixIt");
 
     private final double leftFrontEncoderOffset = Units.degreesToRotations(33.838);
     private final double leftBackEncoderOffset = Units.degreesToRotations(169.277);
