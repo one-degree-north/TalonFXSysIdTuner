@@ -31,7 +31,7 @@ public class RobotContainer {
 
     private void configureBindings() {
         /* Default command is duty cycle control with the left up/down stick */
-        m_mechanism.setDefaultCommand(m_mechanism.joystickDriveCommand(m_joystick::getLeftY));
+        m_mechanism.setDefaultCommand(m_mechanism.joystickDriveCommand(this::getLeftY));
 
 
         /**
