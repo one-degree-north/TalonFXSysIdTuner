@@ -22,9 +22,17 @@ public class RobotContainer {
         configureBindings();
     }
 
+    private double getLeftY() {
+        if (Math.abs(m_joystick.getLeftY()) > 0.1) {
+            return m_joystick.getLeftY();
+        }
+        return 0;
+    }
+
     private void configureBindings() {
         /* Default command is duty cycle control with the left up/down stick */
         m_mechanism.setDefaultCommand(m_mechanism.joystickDriveCommand(m_joystick::getLeftY));
+
 
         /**
          * Joystick Y = quasistatic forward
