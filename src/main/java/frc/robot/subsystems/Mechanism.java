@@ -27,7 +27,7 @@ public class Mechanism extends SubsystemBase {
     /* TODO: Uncomment this line to add a follower motor */
     private final TalonFX m_followerMotorToTest = new TalonFX(13, "*");
 
-    private final TalonFX m_motorToBreak = new TalonFX(15, "*");
+    private final TalonFX m_motorToBrake = new TalonFX(15, "*");
     
     private final DutyCycleOut m_joystickControl = new DutyCycleOut(0);
     private final VoltageOut m_sysidControl = new VoltageOut(0);
@@ -82,7 +82,7 @@ public class Mechanism extends SubsystemBase {
 
         TalonFXConfiguration breakConfig = new TalonFXConfiguration();
         breakConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-        m_motorToBreak.getConfigurator().apply(breakConfig);
+        m_motorToBrake.getConfigurator().apply(breakConfig);
     }
 
     public Command joystickDriveCommand(DoubleSupplier output) {
