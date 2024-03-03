@@ -47,11 +47,13 @@ public class Mechanism extends SubsystemBase {
     public void configureMotors() {
         m_motorToTest.restoreFactoryDefaults();
         m_motorToTest.setSmartCurrentLimit(60);
-        // GEAR RATIO (convert from motor rotations to output rotations)
-        m_motorToTest.getEncoder().setPositionConversionFactor(1);
 
-        // GEAR RATIO DIVIDED BY 60 (convert from motor RPM to output RPM)
-        m_motorToTest.getEncoder().setVelocityConversionFactor(1/60);
+        double gearRatio = 1;
+        // GEAR RATIO (convert from motor rotations to output rotations)
+        m_motorToTest.getEncoder().setPositionConversionFactor(1/gearRatio);
+
+        // GEAR RATIO DIVIDED BY 60 (convert from motor RPM to output RPS)
+        m_motorToTest.getEncoder().setVelocityConversionFactor((1/gearRatio)*(1/60.0));
 
         m_followerMotorToTest.follow(m_followerMotorToTest);
     }
