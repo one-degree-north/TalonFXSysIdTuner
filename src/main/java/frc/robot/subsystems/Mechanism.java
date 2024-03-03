@@ -21,10 +21,11 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
 public class Mechanism extends SubsystemBase {
     /* TODO: Set CAN ID and CAN Bus */
+    //Tune each flywheel one at a time
     private final TalonFX m_motorToTest = new TalonFX(17, "*");
 
     /* TODO: Uncomment this line to add a follower motor */
-    private final TalonFX m_followerMotorToTest = new TalonFX(16, "*");
+    // private final TalonFX m_followerMotorToTest = new TalonFX(16, "*");
     
     private final DutyCycleOut m_joystickControl = new DutyCycleOut(0);
     private final VoltageOut m_sysidControl = new VoltageOut(0);
@@ -75,7 +76,7 @@ public class Mechanism extends SubsystemBase {
         m_motorToTest.getConfigurator().apply(cfg);
 
         /* TODO: Uncomment to add follower motor */
-        m_followerMotorToTest.setControl(new Follower(m_motorToTest.getDeviceID(), true));
+        // m_followerMotorToTest.setControl(new Follower(m_motorToTest.getDeviceID(), true));
     }
 
     public Command joystickDriveCommand(DoubleSupplier output) {
