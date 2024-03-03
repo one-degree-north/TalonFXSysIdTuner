@@ -22,12 +22,12 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
 public class Mechanism extends SubsystemBase {
     /* TODO: Set CAN ID and CAN Bus */
-    private final TalonFX m_motorToTest = new TalonFX(0, "CANWeFixIt");
+    private final TalonFX m_motorToTest = new TalonFX(14, "*");
 
     /* TODO: Uncomment this line to add a follower motor */
-    private final TalonFX m_followerMotorToTest = new TalonFX(1, "CANWeFixIt");
+    private final TalonFX m_followerMotorToTest = new TalonFX(13, "*");
 
-    private final TalonFX m_motorToBreak = new TalonFX(2, "CANWeFixIt");
+    private final TalonFX m_motorToBreak = new TalonFX(15, "*");
     
     private final DutyCycleOut m_joystickControl = new DutyCycleOut(0);
     private final VoltageOut m_sysidControl = new VoltageOut(0);
