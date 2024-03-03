@@ -19,7 +19,7 @@ public class Mechanism extends SubsystemBase {
     private final CANSparkMax m_motorToTest = new CANSparkMax(0, MotorType.kBrushless);
 
     /* TODO: Uncomment this line to add a follower motor */
-    private final CANSparkMax m_followerMotorToTest = new CANSparkMax(0, MotorType.kBrushless);
+    // private final CANSparkMax m_followerMotorToTest = new CANSparkMax(0, MotorType.kBrushless);
     
     
 
@@ -55,7 +55,7 @@ public class Mechanism extends SubsystemBase {
         // GEAR RATIO DIVIDED BY 60 (convert from motor RPM to output RPS)
         m_motorToTest.getEncoder().setVelocityConversionFactor((1/gearRatio)*(1/60.0));
 
-        m_followerMotorToTest.follow(m_followerMotorToTest);
+        // m_followerMotorToTest.follow(m_followerMotorToTest);
     }
 
     public Command joystickDriveCommand(DoubleSupplier output) {
