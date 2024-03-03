@@ -22,9 +22,11 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
 public class Mechanism extends SubsystemBase {
     /* TODO: Set CAN ID and CAN Bus */
-    private final TalonFX m_motorToTest = new TalonFX(0, "CANWeFixIt");
+    private final TalonFX m_motorToTest = new TalonFX(15, "*");
 
-    private final TalonFX m_motorToBreak = new TalonFX(0, "CANWeFixIt");
+    private final TalonFX m_motorToBrake1 = new TalonFX(14, "*");
+    private final TalonFX m_motorToBrake2 = new TalonFX(13, "*");
+
 
     /* TODO: Uncomment this line to add a follower motor */
     
@@ -80,7 +82,8 @@ public class Mechanism extends SubsystemBase {
 
         TalonFXConfiguration breakConfig = new TalonFXConfiguration();
         breakConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-        m_motorToBreak.getConfigurator().apply(breakConfig);
+        m_motorToBrake1.getConfigurator().apply(breakConfig);
+        m_motorToBrake2.getConfigurator().apply(breakConfig);
     }
 
     public Command joystickDriveCommand(DoubleSupplier output) {
