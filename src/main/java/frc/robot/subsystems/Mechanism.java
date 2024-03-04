@@ -29,9 +29,9 @@ public class Mechanism extends SubsystemBase {
             new SysIdRoutine.Config(
                 null,         // Default ramp rate is acceptable
                 Volts.of(4), // Reduce dynamic voltage to 4 to prevent motor brownout
-                null,          // Default timeout is acceptable
+                null          // Default timeout is acceptable
                                        // Log state with Phoenix SignalLogger class
-                (state)->SignalLogger.writeString("state", state.toString())),
+                ),
             new SysIdRoutine.Mechanism(
                 (Measure<Voltage> volts)-> m_motorToTest.setVoltage(volts.in(Volts)),
                 null,
@@ -41,8 +41,6 @@ public class Mechanism extends SubsystemBase {
         setName("Mechanism");
 
         configureMotors();
-
-        SignalLogger.start();
     }
 
     public void configureMotors() {
