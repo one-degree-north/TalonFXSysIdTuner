@@ -6,6 +6,7 @@ import java.util.function.DoubleSupplier;
 
 import com.ctre.phoenix6.SignalLogger;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.units.Measure;
@@ -28,9 +29,9 @@ public class Mechanism extends SubsystemBase {
             new SysIdRoutine.Config(
                 null,         // Default ramp rate is acceptable
                 Volts.of(4), // Reduce dynamic voltage to 4 to prevent motor brownout
-                null,          // Default timeout is acceptable
+                null)          // Default timeout is acceptable
                                        // Log state with Phoenix SignalLogger class
-                (state)->SignalLogger.writeString("state", state.toString())),
+,
             new SysIdRoutine.Mechanism(
                 (Measure<Voltage> volts)-> m_motorToTest.setVoltage(volts.in(Volts)),
                 null,
@@ -48,6 +49,8 @@ public class Mechanism extends SubsystemBase {
         m_motorToTest.restoreFactoryDefaults();
         m_motorToTest.setSmartCurrentLimit(60);
 
+        m_motorToTest.setIdleMode(IdleMode.kCoast);
+        m_followerMotorToTest.setIdleMode(IdleMode.kCoast);
         double gearRatio = 1.0/2.0;
         // GEAR RATIO (convert from motor rotations to output rotations)
         m_motorToTest.getEncoder().setPositionConversionFactor(1/gearRatio);
@@ -55,7 +58,7 @@ public class Mechanism extends SubsystemBase {
         // GEAR RATIO DIVIDED BY 60 (convert from motor RPM to output RPS)
         m_motorToTest.getEncoder().setVelocityConversionFactor((1/gearRatio)*(1/60.0));
 
-        m_followerMotorToTest.follow(m_followerMotorToTest, true);
+        m_followerMotorToTest.follow(m_motorToTest, true);
     }
 
     public Command joystickDriveCommand(DoubleSupplier output) {
