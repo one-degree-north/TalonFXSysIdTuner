@@ -44,6 +44,8 @@ public class RobotContainer {
         m_joystick.b().whileTrue(m_mechanism.sysIdDynamic(SysIdRoutine.Direction.kForward));
         m_joystick.x().whileTrue(m_mechanism.sysIdDynamic(SysIdRoutine.Direction.kReverse));
 
+        m_joystick.rightBumper().onTrue(m_mechanism.zeroPivot());
+
 
         /* Manually stop logging with left bumper after we're done with the tests */
         /* This isn't necessary, but is convenient to reduce the size of the hoot file */

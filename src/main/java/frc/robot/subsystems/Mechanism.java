@@ -67,6 +67,10 @@ public class Mechanism extends SubsystemBase {
         return m_SysIdRoutine.dynamic(direction);
     }
 
+    public Command zeroPivot() {
+        return run(() -> m_motorToTest.getEncoder().setPosition(0));
+    }
+
     @Override
     public void periodic() {
         SmartDashboard.putNumber("Left Pivot Encoder", m_motorToTest.getEncoder().getPosition());
