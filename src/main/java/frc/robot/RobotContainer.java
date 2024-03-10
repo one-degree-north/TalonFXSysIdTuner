@@ -24,7 +24,7 @@ public class RobotContainer {
 
     private double getLeftY() {
         if (Math.abs(m_joystick.getLeftY()) > 0.1) {
-            return m_joystick.getLeftY();
+            return -m_joystick.getLeftY();
         }
         return 0;
     }
