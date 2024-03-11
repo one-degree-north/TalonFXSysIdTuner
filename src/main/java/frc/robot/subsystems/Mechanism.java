@@ -26,10 +26,10 @@ import frc.robot.Constants;
 
 public class Mechanism extends SubsystemBase {
     /* TODO: Set CAN ID and CAN Bus */
-    private final TalonFX m_motorToTest = new TalonFX(15, "*");
+    private final TalonFX m_motorToTest = new TalonFX(18, "*");
 
-    private final TalonFX m_motorToBrake1 = new TalonFX(14, "*");
-    private final TalonFX m_motorToBrake2 = new TalonFX(13, "*");
+    // private final TalonFX m_motorToBrake1 = new TalonFX(14, "*");
+    // private final TalonFX m_motorToBrake2 = new TalonFX(13, "*");
 
 
     /* TODO: Uncomment this line to add a follower motor */
@@ -44,7 +44,7 @@ public class Mechanism extends SubsystemBase {
         new SysIdRoutine(
             new SysIdRoutine.Config(
                 null,         // Default ramp rate is acceptable
-                Volts.of(0.7), // Reduce dynamic voltage to 4 to prevent motor brownout
+                Volts.of(3), // Reduce dynamic voltage to 4 to prevent motor brownout
                 null,          // Default timeout is acceptable
                                        // Log state with Phoenix SignalLogger class
                 (state)->SignalLogger.writeString("state", state.toString())),
@@ -80,35 +80,35 @@ public class Mechanism extends SubsystemBase {
         cfg.CurrentLimits.SupplyCurrentThreshold = 60;
         cfg.CurrentLimits.SupplyTimeThreshold = 0.1;
 
-        cfg.Feedback.SensorToMechanismRatio = 5.0;
+        cfg.Feedback.SensorToMechanismRatio = 10.5/1.0;
         cfg.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-        cfg.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+        cfg.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
 
-        cfg.Slot0.kP = Constants.kP;
-        cfg.Slot0.kV = Constants.kV;
-        cfg.Slot0.kA = Constants.kA;
-        cfg.Slot0.kS = Constants.kS;
-        cfg.Slot0.kG = Constants.kG;
-        cfg.Slot0.GravityType = GravityTypeValue.Elevator_Static;
-        cfg.MotionMagic.MotionMagicCruiseVelocity = 3;
-        cfg.MotionMagic.MotionMagicAcceleration = 5;
+        // cfg.Slot0.kP = Constants.kP;
+        // cfg.Slot0.kV = Constants.kV;
+        // cfg.Slot0.kA = Constants.kA;
+        // cfg.Slot0.kS = Constants.kS;
+        // cfg.Slot0.kG = Constants.kG;
+        // cfg.Slot0.GravityType = GravityTypeValue.Elevator_Static;
+        // cfg.MotionMagic.MotionMagicCruiseVelocity = 3;
+        // cfg.MotionMagic.MotionMagicAcceleration = 5;
 
 
         m_motorToTest.getConfigurator().apply(cfg);
 
-        /* TODO: Uncomment to add follower motor */
+        // /* TODO: Uncomment to add follower motor */
 
-        TalonFXConfiguration breakConfig = new TalonFXConfiguration();
-        breakConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-        m_motorToBrake1.getConfigurator().apply(breakConfig);
-        m_motorToBrake2.getConfigurator().apply(breakConfig);
+        // TalonFXConfiguration breakConfig = new TalonFXConfiguration();
+        // breakConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+        // m_motorToBrake1.getConfigurator().apply(breakConfig);
+        // m_motorToBrake2.getConfigurator().apply(breakConfig);
 
-        m_motorToTest.setPosition(0);
+        // m_motorToTest.setPosition(0);
     }
 
-    public void setSetpointPosition(double setpoint) {
-        m_motorToTest.setControl(m_position.withPosition(setpoint));
-    }
+    // public void setSetpointPosition(double setpoint) {
+    //     m_motorToTest.setControl(m_position.withPosition(setpoint));
+    // }
 
     public Command joystickDriveCommand(DoubleSupplier output) {
         return run(()->m_motorToTest.setControl(m_joystickControl.withOutput(output.getAsDouble())));
@@ -125,7 +125,7 @@ public class Mechanism extends SubsystemBase {
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("Elevator velocity", m_motorToTest.getVelocity().getValue());
-        SmartDashboard.putNumber("Elevator Position", m_motorToTest.getPosition().getValue());
+        SmartDashboard.putNumber("Climb velocity", m_motorToTest.getVelocity().getValue());
+        SmartDashboard.putNumber("Climb Position", m_motorToTest.getPosition().getValue());
     }
 }

@@ -6,6 +6,8 @@ package frc.robot;
 
 import com.ctre.phoenix6.SignalLogger;
 
+import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -23,6 +25,8 @@ public class RobotContainer {
     double voltageApplied = 0;
 
     public RobotContainer() {
+        Compressor c = new Compressor(PneumaticsModuleType.REVPH);
+        c.disable();
         configureBindings();
     }
 
@@ -35,13 +39,13 @@ public class RobotContainer {
 
     private void configureBindings() {
         /* Default command is duty cycle control with the left up/down stick */
-        // m_mechanism.setDefaultCommand(m_mechanism.joystickDriveCommand(this::getLeftY));
+        m_mechanism.setDefaultCommand(m_mechanism.joystickDriveCommand(this::getLeftY));
 
         m_joystick.rightBumper().whileTrue(m_mechanism.voltageCommand(() -> voltageApplied));
         m_joystick.rightBumper().onFalse(m_mechanism.voltageCommand(() -> 0));
 
-        m_joystick.povUp().onTrue(new InstantCommand(() -> m_mechanism.setSetpointPosition(1), m_mechanism));
-        m_joystick.povDown().onTrue(new InstantCommand(() -> m_mechanism.setSetpointPosition(0), m_mechanism));
+        // m_joystick.povUp().onTrue(new InstantCommand(() -> m_mechanism.setSetpointPosition(1), m_mechanism));
+        // m_joystick.povDown().onTrue(new InstantCommand(() -> m_mechanism.setSetpointPosition(0), m_mechanism));
 
         m_joystick.leftBumper().onTrue(new InstantCommand(() -> {voltageApplied -= 0.1;}));
         m_joystick.leftTrigger().onTrue(new InstantCommand(() -> {voltageApplied += 0.1;}));
