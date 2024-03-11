@@ -6,8 +6,10 @@ package frc.robot;
 
 import com.ctre.phoenix6.SignalLogger;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -17,6 +19,8 @@ public class RobotContainer {
 
     CommandXboxController m_joystick = new CommandXboxController(0);
     Mechanism m_mechanism = new Mechanism();
+
+    double voltageApplied = 0;
 
     public RobotContainer() {
         configureBindings();
@@ -31,7 +35,16 @@ public class RobotContainer {
 
     private void configureBindings() {
         /* Default command is duty cycle control with the left up/down stick */
-        m_mechanism.setDefaultCommand(m_mechanism.joystickDriveCommand(this::getLeftY));
+        // m_mechanism.setDefaultCommand(m_mechanism.joystickDriveCommand(this::getLeftY));
+
+        m_joystick.rightBumper().whileTrue(m_mechanism.voltageCommand(() -> voltageApplied));
+        m_joystick.rightBumper().onFalse(m_mechanism.voltageCommand(() -> 0));
+
+        m_joystick.povUp().onTrue(new InstantCommand(() -> m_mechanism.setSetpointPosition(1), m_mechanism));
+        m_joystick.povDown().onTrue(new InstantCommand(() -> m_mechanism.setSetpointPosition(0), m_mechanism));
+
+        m_joystick.leftBumper().onTrue(new InstantCommand(() -> {voltageApplied -= 0.1;}));
+        m_joystick.leftTrigger().onTrue(new InstantCommand(() -> {voltageApplied += 0.1;}));
 
         /**
          * Joystick Y = quasistatic forward
@@ -52,5 +65,9 @@ public class RobotContainer {
 
     public Command getAutonomousCommand() {
         return Commands.print("No autonomous command configured");
+    }
+
+    public void periodic() {
+        SmartDashboard.putNumber("Voltage Applied", voltageApplied);
     }
 }
