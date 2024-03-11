@@ -9,6 +9,7 @@ import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.Follower;
+import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
@@ -19,18 +20,21 @@ import edu.wpi.first.units.Voltage;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.Constants;
 
 public class Mechanism extends SubsystemBase {
     /* TODO: Set CAN ID and CAN Bus */
-    private final TalonFX m_motorToTest = new TalonFX(14, "*");
+    private final TalonFX m_motorToTest = new TalonFX(13, "*");
 
     /* TODO: Uncomment this line to add a follower motor */
-    private final TalonFX m_followerMotorToTest = new TalonFX(13, "*");
+    private final TalonFX m_followerMotorToTest = new TalonFX(14, "*");
 
     private final TalonFX m_motorToBrake = new TalonFX(15, "*");
     
     private final DutyCycleOut m_joystickControl = new DutyCycleOut(0);
     private final VoltageOut m_sysidControl = new VoltageOut(0);
+
+    private final MotionMagicVoltage positionLock = new MotionMagicVoltage(0);
 
     private SysIdRoutine m_SysIdRoutine =
         new SysIdRoutine(
@@ -81,6 +85,12 @@ public class Mechanism extends SubsystemBase {
         m_followerMotorToTest.setControl(new Follower(m_motorToTest.getDeviceID(), true));
 
         TalonFXConfiguration breakConfig = new TalonFXConfiguration();
+        breakConfig.Feedback.SensorToMechanismRatio = 5.0/1.0;
+        breakConfig.Slot0.withKP(Constants.elevatorkP).withKS(Constants.elevatorkS)
+        .withKV(Constants.elevatorkV);
+
+        breakConfig.MotionMagic.MotionMagicCruiseVelocity = 2;
+        breakConfig.MotionMagic.MotionMagicAcceleration = 5;
         breakConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
         m_motorToBrake.getConfigurator().apply(breakConfig);
     }
