@@ -15,8 +15,11 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.Measure;
 import edu.wpi.first.units.Voltage;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -36,11 +39,15 @@ public class Mechanism extends SubsystemBase {
 
     private final MotionMagicVoltage positionLock = new MotionMagicVoltage(0);
 
+    private final DutyCycleEncoder encoder = new DutyCycleEncoder(0);
+
+    private double elevatorPositionSetpoint = 0;
+
     private SysIdRoutine m_SysIdRoutine =
         new SysIdRoutine(
             new SysIdRoutine.Config(
                 null,         // Default ramp rate is acceptable
-                Volts.of(4), // Reduce dynamic voltage to 4 to prevent motor brownout
+                Volts.of(2), // Reduce dynamic voltage to 4 to prevent motor brownout
                 null,          // Default timeout is acceptable
                                        // Log state with Phoenix SignalLogger class
                 (state)->SignalLogger.writeString("state", state.toString())),
@@ -63,7 +70,13 @@ public class Mechanism extends SubsystemBase {
         /* Optimize out the other signals, since they're not particularly helpful for us */
         m_motorToTest.optimizeBusUtilization();
 
+        Timer.delay(1);
+        m_motorToBrake.setPosition(0);
+        m_motorToTest.setPosition(-encoder.getAbsolutePosition() - (-0.2778));
+
         SignalLogger.start();
+
+        setElevatorPosition(1.7);
     }
 
     public void configureMotors() {
@@ -79,12 +92,19 @@ public class Mechanism extends SubsystemBase {
         cfg.Feedback.SensorToMechanismRatio = 120.0/1.0;
         cfg.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
+        cfg.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+
         m_motorToTest.getConfigurator().apply(cfg);
 
         /* TODO: Uncomment to add follower motor */
         m_followerMotorToTest.setControl(new Follower(m_motorToTest.getDeviceID(), true));
 
         TalonFXConfiguration breakConfig = new TalonFXConfiguration();
+        breakConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
+        breakConfig.CurrentLimits.SupplyCurrentLimit = 35;
+        breakConfig.CurrentLimits.SupplyCurrentThreshold = 60;
+        breakConfig.CurrentLimits.SupplyTimeThreshold = 0.1;
+        breakConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
         breakConfig.Feedback.SensorToMechanismRatio = 5.0/1.0;
         breakConfig.Slot0.withKP(Constants.elevatorkP).withKS(Constants.elevatorkS)
         .withKV(Constants.elevatorkV);
@@ -95,6 +115,10 @@ public class Mechanism extends SubsystemBase {
         m_motorToBrake.getConfigurator().apply(breakConfig);
     }
 
+    public void setElevatorPosition(double setpoint) {
+        elevatorPositionSetpoint = setpoint;
+    }
+
     public Command joystickDriveCommand(DoubleSupplier output) {
         return run(()->m_motorToTest.setControl(m_joystickControl.withOutput(output.getAsDouble())));
     }
@@ -103,5 +127,15 @@ public class Mechanism extends SubsystemBase {
     }
     public Command sysIdDynamic(SysIdRoutine.Direction direction) {
         return m_SysIdRoutine.dynamic(direction);
+    }
+    
+    @Override
+    public void periodic() {
+        m_motorToBrake.setControl(positionLock.withPosition(elevatorPositionSetpoint)
+        .withFeedForward(Constants.elevatorkG * Math.sin(Units.rotationsToRadians(m_motorToTest.getPosition().getValue()))
+        )
+        );
+
+
     }
 }
